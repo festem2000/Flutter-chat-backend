@@ -22,13 +22,14 @@ const validarJWT = (req, res, next) => {
             msg: 'No hay token en la peticion'
         });
     }
+    console.log(req.header);
 
     try {
 
         const { uid } = jwt.verify(token, process.env.JWT_KEY)
 
         req.uid = uid;
-
+        console.log(req.uid);
         next();
 
     } catch (e) {

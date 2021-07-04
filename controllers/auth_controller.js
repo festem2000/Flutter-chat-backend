@@ -52,7 +52,6 @@ const crearUsuario = async(req, res = response) => {
         //  
         res.json({
             ok: true,
-            msg: 'Crear usuario!!!!!!!',
             usuario,
             token
         });
@@ -75,8 +74,8 @@ const loginUsuario = async(req, res = response) => {
     try {
 
         // Validar que el correo exista en la BD
-        const usuarioDB = await Usuario.findOne({ email });
-        if (!usuarioDB) {
+        const usuario = await Usuario.findOne({ email });
+        if (!usuario) {
             return res.status(404).json({
                 ok: false,
                 msg: 'Email no encontrado'
@@ -84,7 +83,7 @@ const loginUsuario = async(req, res = response) => {
         }
 
         //Validar que las contrasenias sean iguales
-        const validarPassword = bcrypt.compareSync(password, usuarioDB.password);
+        const validarPassword = bcrypt.compareSync(password, usuario.password);
         if (!validarPassword) {
             return res.status(404).json({
                 ok: false,
@@ -94,13 +93,13 @@ const loginUsuario = async(req, res = response) => {
 
 
         // Si todo va bien se debe de generar el JWT
-        const token = await generarJWT(usuarioDB.id);
+        const token = await generarJWT(usuario.id);
 
 
         //  Respuesta que se envia del login
         res.json({
             ok: true,
-            usuarioDB,
+            usuario,
             token
         });
 
